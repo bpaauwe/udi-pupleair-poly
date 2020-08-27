@@ -3,7 +3,7 @@
         <range uom="2" subset="0,1" />
     </editor>
     <editor id="AQI">
-        <range uom="56" min="0" max="20" prec="3" />
+        <range uom="56" min="0" max="600" prec="3" />
     </editor>
     <editor id="TEMPERATURE">
         <range uom="17" min="-50" max="150" step="1" prec="1" />
