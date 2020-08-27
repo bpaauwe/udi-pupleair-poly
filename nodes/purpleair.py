@@ -121,37 +121,37 @@ class Controller(polyinterface.Controller):
                 LOGGER.info('Air Quality sensor type ' + results[0]['Type'])
 
             if 'PM2_5Value' in results[0]:
-                self.update_driver('GV0', results[0]['PM2_5Value')
+                self.update_driver('GV0', results[0]['PM2_5Value'])
 
             if 'temp_f' in results[0]:
                 self.update_driver('CLITEMP', results[0]['temp_f'])
             if 'humidity' in results[0]:
-                self.update_driver('CLIHUM', results[0]['humidity']))
+                self.update_driver('CLIHUM', results[0]['humidity'])
             if 'pressure' in results[0]:
-                self.update_driver('BARPRES', results[0]['pressure']))
+                self.update_driver('BARPRES', results[0]['pressure'])
 
             if 'AGE' in results[0]:
-                self.update_driver('GV1', results[0]['AGE']))
+                self.update_driver('GV1', results[0]['AGE'])
 
             if 'Stats' in results[0]:
                 stats = resutls[0]['Stats']
 
                 if 'v' in status:
-                    self.update_driver('GV2', results[0]['v']))
+                    self.update_driver('GV2', results[0]['v'])
                 if 'v1' in status:
-                    self.update_driver('GV3', results[0]['v1']))
+                    self.update_driver('GV3', results[0]['v1'])
                 if 'v2' in status:
-                    self.update_driver('GV4', results[0]['v2']))
+                    self.update_driver('GV4', results[0]['v2'])
                 if 'v3' in status:
-                    self.update_driver('GV5', results[0]['v3']))
+                    self.update_driver('GV5', results[0]['v3'])
                 if 'v4' in status:
-                    self.update_driver('GV6', results[0]['v4']))
+                    self.update_driver('GV6', results[0]['v4'])
                 if 'v5' in status:
-                    self.update_driver('GV7', results[0]['v5']))
+                    self.update_driver('GV7', results[0]['v5'])
                 if 'v6' in status:
-                    self.update_driver('GV8', results[0]['v6']))
+                    self.update_driver('GV8', results[0]['v6'])
                 if 'p1' in status:
-                    self.update_driver('GV9', results[0]['pm']))
+                    self.update_driver('GV9', results[0]['pm'])
 
         except Exception as e:
             LOGGER.error('Current observation update failure')
