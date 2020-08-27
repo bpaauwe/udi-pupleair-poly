@@ -31,11 +31,23 @@ class Controller(polyinterface.Controller):
         self.address = 'pa'
         self.primary = self.address
         self.configured = False
-        self.location_key = ""
-        self.latitude = 0
-        self.longitude = 0
         self.force = True
         self.host = 'https://www.purpleair.com/'
+        self.uom = {
+                'CLITEMP' : 17,
+                'CLIHUM' : 22,
+                'BARPRES' : 117,
+                'GV0' : 56,
+                'GV1' : 10,
+                'GV2' : 56,
+                'GV3' : 56,
+                'GV4' : 56,
+                'GV5' : 56,
+                'GV6' : 56,
+                'GV7' : 56,
+                'GV8' : 56,
+                'GV9' : 56,
+                }
 
         self.params = node_funcs.NSParameters([{
             'name': 'Senosor ID',
