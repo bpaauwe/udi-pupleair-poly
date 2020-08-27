@@ -1,0 +1,27 @@
+<editors>
+    <editor id="bool">
+        <range uom="2" subset="0,1" />
+    </editor>
+    <editor id="AQI">
+        <range uom="56" min="0" max="20" prec="3" />
+    </editor>
+    <editor id="TEMPERATURE">
+        <range uom="17" min="-50" max="150" step="1" prec="1" />
+        <range uom="4" min="-10" max="100" step="1" prec="1" />
+    </editor>
+    <editor id="PERCENT">
+        <range uom="22" min="0" max="100" prec="0" />
+    </editor>
+    <editor id="PRESSURE">
+        <range uom="23" min="0" max="100" prec="0" />
+        <range uom="117" min="1000" max="2000" prec="0" />
+        <range uom="118" min="1000" max="2000" prec="0" />
+    </editor>
+    <editor id="DAY">
+        <range uom="10" min="0" max="2000" />
+    </editor>
+	<editor id="DEBUG">
+		<range uom="25" subset="0,10,20,30,40,50" NLS="DBG" />
+	</editor>
+
+</editors>

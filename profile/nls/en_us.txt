@@ -1,0 +1,28 @@
+# controller
+ND-weather-NAME = Air Quality
+ND-weather-ICON = Weather
+CMD-ctl-DISCOVER-NAME = Re-Discover
+CMD-ctl-UPDATE_PROFILE-NAME = Update Profile
+CMD-ctl-REMOVE_NOTICES_ALL-NAME = Remove Notices
+CMD-ctl-DEBUG-NAME = Log Level
+ST-ctl-ST-NAME = NodeServer Online
+ST-ctl-CLITEMP-NAME = Temperature
+ST-ctl-CLIHUM-NAME = Humidity
+ST-ctl-BARPRES-NAME = Pressure
+ST-ctl-GV0-NAME = Current PM2.5
+ST-ctl-GV1-NAME = Age
+ST-ctl-GV2-NAME = Real Time PM2.5
+ST-ctl-GV3-NAME = 10 Minute Average
+ST-ctl-GV4-NAME = 30 Minute Average
+ST-ctl-GV5-NAME = 60 Minute Average
+ST-ctl-GV6-NAME = 6 Hour Average
+ST-ctl-GV7-NAME = 24 Hour Average
+ST-ctl-GV8-NAME = 1 Week Average
+ST-ctl-GV9-NAME = Real Time PM2.5
+
+DBG-0 = Off
+DBG-10 = Debug
+DBG-20 = Info
+DBG-30 = Warning
+DBG-40 = Error
+DBG-50 = Critical

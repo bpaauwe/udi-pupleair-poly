@@ -1,0 +1,32 @@
+<nodeDefs>
+  <nodeDef id="purple air" nodeType="139" nls="ctl">
+    <editors />
+    <sts>
+      <st id="ST" editor="bool" />
+      <st id="GV0" editor="AQI" />
+      <st id="GV1" editor="DAY" />
+      <st id="CLITEMP" editor="TEMPERATURE" />
+      <st id="CLIHUM" editor="PERCENT" />
+      <st id="BARPRES" editor="PRESSURE" />
+      <st id="GV2" editor="AQI" />
+      <st id="GV3" editor="AQI" />
+      <st id="GV4" editor="AQI" />
+      <st id="GV5" editor="AQI" />
+      <st id="GV6" editor="AQI" />
+      <st id="GV7" editor="AQI" />
+      <st id="GV8" editor="AQI" />
+      <st id="GV9" editor="AQI" />
+    </sts>
+    <cmds>
+      <sends />
+      <accepts>
+        <cmd id="DISCOVER" />
+        <cmd id="REMOVE_NOTICES_ALL" />
+        <cmd id="UPDATE_PROFILE" />
+		<cmd id="DEBUG">
+			<p id="" editor="DEBUG" init="GVP"/>
+		</cmd>
+      </accepts>
+    </cmds>
+  </nodeDef>
+</nodeDefs>
