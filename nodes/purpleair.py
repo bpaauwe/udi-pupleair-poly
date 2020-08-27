@@ -102,7 +102,7 @@ class Controller(polyinterface.Controller):
 
 
         try:
-            request = self.host + '?show=' + self.params.get('Station ID')
+            request = self.host + '?show=' + self.params.get('Sensor ID')
 
             c = requests.get(request)
             jdata = c.json()
@@ -185,7 +185,7 @@ class Controller(polyinterface.Controller):
             self.configured = True
         else:
             LOGGER.debug('Configuration required.')
-            LOGGER.debug('Station ID = ' + self.params.get('Station ID'))
+            LOGGER.debug('Sensor ID = ' + self.params.get('Sensor ID'))
             self.params.send_notices(self)
 
     def remove_notices_all(self, command):
