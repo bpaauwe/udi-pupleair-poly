@@ -8,14 +8,12 @@
       <st id="CLITEMP" editor="TEMPERATURE" />
       <st id="CLIHUM" editor="PERCENT" />
       <st id="BARPRES" editor="PRESSURE" />
-      <st id="GV2" editor="AQI" />
       <st id="GV3" editor="AQI" />
       <st id="GV4" editor="AQI" />
       <st id="GV5" editor="AQI" />
       <st id="GV6" editor="AQI" />
       <st id="GV7" editor="AQI" />
       <st id="GV8" editor="AQI" />
-      <st id="GV9" editor="AQI" />
       <st id="GV10" editor="AQI" />
       <st id="GV11" editor="AQISTR" />
     </sts>

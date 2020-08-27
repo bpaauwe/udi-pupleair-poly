@@ -184,8 +184,9 @@ class Controller(polyinterface.Controller):
             if 'Stats' in results[0]:
                 stats = json.loads(results[0]['Stats'])
 
-                if 'v' in stats:
-                    self.update_driver('GV2', stats['v'])
+                #if 'v' in stats:
+                    # duplicate of PM2_5Value above
+                    #self.update_driver('GV2', stats['v'])
                 if 'v1' in stats:
                     self.update_driver('GV3', stats['v1'])
                 if 'v2' in stats:
@@ -198,8 +199,9 @@ class Controller(polyinterface.Controller):
                     self.update_driver('GV7', stats['v5'])
                 if 'v6' in stats:
                     self.update_driver('GV8', stats['v6'])
-                if 'pm' in stats:
-                    self.update_driver('GV9', stats['pm'])
+                #if 'pm' in stats:
+                    # duplicate of PM2_5Value above
+                    #self.update_driver('GV9', stats['pm'])
 
         except Exception as e:
             LOGGER.error('Current observation update failure')
@@ -274,14 +276,12 @@ class Controller(polyinterface.Controller):
             {'driver': 'BARPRES', 'value': 0, 'uom': 117}, # pressure
             {'driver': 'GV0', 'value': 0, 'uom': 56},      # current PM2.5
             {'driver': 'GV1', 'value': 0, 'uom': 10},      # age in days
-            {'driver': 'GV2', 'value': 0, 'uom': 56},      # rt PM2.5
             {'driver': 'GV3', 'value': 0, 'uom': 56},      # 10 min avg
             {'driver': 'GV4', 'value': 0, 'uom': 56},      # 30 min avg
             {'driver': 'GV5', 'value': 0, 'uom': 56},      # 60 min avg
             {'driver': 'GV6', 'value': 0, 'uom': 56},      # 6 hr avg
             {'driver': 'GV7', 'value': 0, 'uom': 56},      # 24 hr avg
             {'driver': 'GV8', 'value': 0, 'uom': 56},      # 1 week avg
-            {'driver': 'GV9', 'value': 0, 'uom': 56},      # rt PM2.5
             {'driver': 'GV10', 'value': 0, 'uom': 56},     # AQI
             {'driver': 'GV11', 'value': 0, 'uom': 25},     # AQI string
             ]
