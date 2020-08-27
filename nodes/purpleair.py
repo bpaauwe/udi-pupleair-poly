@@ -102,7 +102,7 @@ class Controller(polyinterface.Controller):
 
 
         try:
-            request = self.host + '?show=' + self.params.get('Sensor ID')
+            request = self.host + '/json?show=' + self.params.get('Sensor ID')
 
             c = requests.get(request)
             jdata = c.json()
@@ -134,7 +134,7 @@ class Controller(polyinterface.Controller):
                 self.update_driver('GV1', results[0]['AGE'])
 
             if 'Stats' in results[0]:
-                stats = resutls[0]['Stats']
+                stats = results[0]['Stats']
 
                 if 'v' in status:
                     self.update_driver('GV2', results[0]['v'])
