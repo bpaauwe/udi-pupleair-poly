@@ -1,5 +1,5 @@
 <nodeDefs>
-  <nodeDef id="purple air" nodeType="139" nls="ctl">
+  <nodeDef id="aqi" nodeType="139" nls="ctl">
     <editors />
     <sts>
       <st id="ST" editor="bool" />

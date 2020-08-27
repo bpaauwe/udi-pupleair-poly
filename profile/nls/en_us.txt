@@ -1,6 +1,6 @@
 # controller
-ND-weather-NAME = Air Quality
-ND-weather-ICON = Weather
+ND-aqi-NAME = Air Quality
+ND-aqi-ICON = Weather
 CMD-ctl-DISCOVER-NAME = Re-Discover
 CMD-ctl-UPDATE_PROFILE-NAME = Update Profile
 CMD-ctl-REMOVE_NOTICES_ALL-NAME = Remove Notices
@@ -26,3 +26,14 @@ DBG-20 = Info
 DBG-30 = Warning
 DBG-40 = Error
 DBG-50 = Critical
+
+AQI-0 = Satisfactory
+AQI-50 = Acceptable
+AQI-100 = Unhealthy subset
+AQI-150 = Unhealthy
+AQI-200 = Unhealthy
+AQI-250 = Very Unhealthy
+AQI-300 = Emergency
+AQI-350 = Emergency
+AQI-400 = Emergency
+AQI-500 = Emergency
