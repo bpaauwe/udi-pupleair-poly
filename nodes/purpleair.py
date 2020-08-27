@@ -23,7 +23,7 @@ LOGGER = polyinterface.LOGGER
 
 @node_funcs.add_functions_as_methods(node_funcs.functions)
 class Controller(polyinterface.Controller):
-    id = 'air quality'
+    id = 'aqi'
     hint = [0,0,0,0]
     def __init__(self, polyglot):
         super(Controller, self).__init__(polyglot)
@@ -50,7 +50,7 @@ class Controller(polyinterface.Controller):
                 }
 
         self.params = node_funcs.NSParameters([{
-            'name': 'Senosor ID',
+            'name': 'Sensor ID',
             'default': 'set me',
             'isRequired': True,
             'notice': 'A Sensor ID must be set',
