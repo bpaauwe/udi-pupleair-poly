@@ -134,24 +134,24 @@ class Controller(polyinterface.Controller):
                 self.update_driver('GV1', results[0]['AGE'])
 
             if 'Stats' in results[0]:
-                stats = results[0]['Stats']
+                stats = json.loads(results[0]['Stats'])
 
-                if 'v' in status:
-                    self.update_driver('GV2', results[0]['v'])
-                if 'v1' in status:
-                    self.update_driver('GV3', results[0]['v1'])
-                if 'v2' in status:
-                    self.update_driver('GV4', results[0]['v2'])
-                if 'v3' in status:
-                    self.update_driver('GV5', results[0]['v3'])
-                if 'v4' in status:
-                    self.update_driver('GV6', results[0]['v4'])
-                if 'v5' in status:
-                    self.update_driver('GV7', results[0]['v5'])
-                if 'v6' in status:
-                    self.update_driver('GV8', results[0]['v6'])
-                if 'p1' in status:
-                    self.update_driver('GV9', results[0]['pm'])
+                if 'v' in stats:
+                    self.update_driver('GV2', stats['v'])
+                if 'v1' in stats:
+                    self.update_driver('GV3', stats['v1'])
+                if 'v2' in stats:
+                    self.update_driver('GV4', stats['v2'])
+                if 'v3' in stats:
+                    self.update_driver('GV5', stats['v3'])
+                if 'v4' in stats:
+                    self.update_driver('GV6', stats['v4'])
+                if 'v5' in stats:
+                    self.update_driver('GV7', stats['v5'])
+                if 'v6' in stats:
+                    self.update_driver('GV8', stats['v6'])
+                if 'pm' in stats:
+                    self.update_driver('GV9', stats['pm'])
 
         except Exception as e:
             LOGGER.error('Current observation update failure')
