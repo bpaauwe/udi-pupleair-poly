@@ -47,6 +47,8 @@ class Controller(polyinterface.Controller):
                 'GV7' : 56,
                 'GV8' : 56,
                 'GV9' : 56,
+                'GV10' : 56,
+                'GV11' : 25,
                 }
 
         self.params = node_funcs.NSParameters([{
@@ -92,6 +94,47 @@ class Controller(polyinterface.Controller):
     def shortPoll(self):
         self.query_conditions()
 
+    def epa_aqi(self, pm25):
+        aqi = 0
+        breakpoints = [
+                [0, 12],
+                [12.1, 35.4],
+                [35.5, 55.4],
+                [55.5, 150.4],
+                [150.5, 250.4],
+                [250.5, 500.4],
+                ]
+        indexes = [
+                [0, 50],
+                [51, 100],
+                [101, 150],
+                [151, 200],
+                [201, 300],
+                [301, 500],
+                ]
+
+        pm25 = round(pm25,1)
+
+        # find the breakpoints for the pm25 value
+        try:
+            for bpi in range(0,6):
+                if pm25 >= breakpoints[bpi][0] and pm25 <= breakpoints[bpi][1]:
+                    break
+        except Exception as e:
+            LOGGER.error('AQI_bp: ' + str(e))
+        
+        if bpi == 6:
+            LOGGER.error('AQI out of range!')
+            return
+
+        try:
+            aqi = ((indexes[bpi][1] - indexes[bpi][0]) / (breakpoints[bpi][1] - breakpoints[bpi][0])) * (pm25 - breakpoints[bpi][0]) + indexes[bpi][0]
+        except Exception as e:
+            LOGGER.error('AQI_calc: ' + str(e))
+
+        LOGGER.debug('Calculated AQI = ' + str(aqi))
+        return (round(aqi, 0), indexes[bpi][0])
+
     def query_conditions(self):
         # Query for the current air quality conditions. We can do this fairly
         # frequently, probably as often as once a minute.
@@ -115,6 +158,8 @@ class Controller(polyinterface.Controller):
 
             results = jdata['results']
 
+            LOGGER.debug('found ' + str(len(results)) + ' sensor channesl.')
+
             if 'Label' in results[0]:
                 LOGGER.info('Air Quality data for ' + results[0]['Label'])
             if 'Type' in results[0]:
@@ -122,6 +167,9 @@ class Controller(polyinterface.Controller):
 
             if 'PM2_5Value' in results[0]:
                 self.update_driver('GV0', results[0]['PM2_5Value'])
+                (aqi, idx) = self.epa_aqi(float(results[0]['PM2_5Value']))
+                self.update_driver('GV10', aqi)
+                self.update_driver('GV11', idx)
 
             if 'temp_f' in results[0]:
                 self.update_driver('CLITEMP', results[0]['temp_f'])
@@ -234,6 +282,8 @@ class Controller(polyinterface.Controller):
             {'driver': 'GV7', 'value': 0, 'uom': 56},      # 24 hr avg
             {'driver': 'GV8', 'value': 0, 'uom': 56},      # 1 week avg
             {'driver': 'GV9', 'value': 0, 'uom': 56},      # rt PM2.5
+            {'driver': 'GV10', 'value': 0, 'uom': 56},     # AQI
+            {'driver': 'GV11', 'value': 0, 'uom': 25},     # AQI string
             ]
 
 

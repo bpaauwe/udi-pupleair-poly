@@ -20,6 +20,9 @@
     <editor id="DAY">
         <range uom="10" min="0" max="2000" />
     </editor>
+    <editor id="AQISTR">
+        <range uom="25" subset="0,51,101,151,201,301" NLS="AQI" />
+    </editor>
 	<editor id="DEBUG">
 		<range uom="25" subset="0,10,20,30,40,50" NLS="DBG" />
 	</editor>
