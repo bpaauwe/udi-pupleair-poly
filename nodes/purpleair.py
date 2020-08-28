@@ -167,9 +167,6 @@ class Controller(polyinterface.Controller):
 
             if 'PM2_5Value' in results[0]:
                 self.update_driver('GV0', results[0]['PM2_5Value'])
-                (aqi, idx) = self.epa_aqi(float(results[0]['PM2_5Value']))
-                self.update_driver('GV10', aqi)
-                self.update_driver('GV11', idx)
 
             if 'temp_f' in results[0]:
                 self.update_driver('CLITEMP', results[0]['temp_f'])
@@ -189,6 +186,9 @@ class Controller(polyinterface.Controller):
                     #self.update_driver('GV2', stats['v'])
                 if 'v1' in stats:
                     self.update_driver('GV3', stats['v1'])
+                    (aqi, idx) = self.epa_aqi(float(stats['v1']))
+                    self.update_driver('GV10', aqi)
+                    self.update_driver('GV11', idx)
                 if 'v2' in stats:
                     self.update_driver('GV4', stats['v2'])
                 if 'v3' in stats:
