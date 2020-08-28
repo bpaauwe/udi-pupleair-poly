@@ -7,8 +7,8 @@
     "install_cloud": "install_cloud.sh",
     "description": "Add air quality data to the ISY994",
     "notice": "",
-    "shortPoll": "60",
-    "longPoll": "600",
+    "shortPoll": "600",
+    "longPoll": "3600",
     "profile_version": "1.0.0",
     "credits": [ {
 	"title": "Purple Air: a node server for air quality data",
