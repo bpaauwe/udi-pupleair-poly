@@ -5,6 +5,9 @@
     <editor id="AQI">
         <range uom="56" min="0" max="600" prec="3" />
     </editor>
+    <editor id="EPAAQI">
+        <range uom="56" min="0" max="500" prec="0" />
+    </editor>
     <editor id="TEMPERATURE">
         <range uom="17" min="-50" max="150" step="1" prec="1" />
         <range uom="4" min="-10" max="100" step="1" prec="1" />
