@@ -27,7 +27,7 @@ class Controller(polyinterface.Controller):
     hint = [0,0,0,0]
     def __init__(self, polyglot):
         super(Controller, self).__init__(polyglot)
-        self.name = 'Puple Air AQI'
+        self.name = 'Purple Air AQI'
         self.address = 'pa'
         self.primary = self.address
         self.configured = False
@@ -159,6 +159,11 @@ class Controller(polyinterface.Controller):
             results = jdata['results']
 
             LOGGER.debug('found ' + str(len(results)) + ' sensor channesl.')
+
+            # TODO:
+            # if there are two channels of data we should compare them
+            # and make sure they are close (within 10%?) and if so, 
+            # take the average to display.
 
             if 'Label' in results[0]:
                 LOGGER.info('Air Quality data for ' + results[0]['Label'])
