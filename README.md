@@ -33,14 +33,15 @@ The settings for this node are:
  * sys.node.[address].BARPRES (current barometric pressure)
  * sys.node.[address].GV0     (current PM2.5 value speed)
  * sys.node.[address].GV1     (Age of data in days)
- * sys.node.[address].GV2     (real time PM2.5 value)
  * sys.node.[address].GV3     (10 minute average)
  * sys.node.[address].GV4     (30 minute average)
  * sys.node.[address].GV5     (60 minute average)
  * sys.node.[address].GV6     (6 hour average)
  * sys.node.[address].GV7     (24 hour average)
  * sys.node.[address].GV8     (1 week average)
- * sys.node.[address].GV9     (real time PM2.5 value)
+ * sys.node.[address].GV10    (EPA Air Quality Index number)
+ * sys.node.[address].GV11    (EPA Air Quality Index category)
+ * sys.node.[address].GV12    (Data confidence)
 
 
 ## Requirements
@@ -57,5 +58,8 @@ The nodeserver keeps track of the version number and when a profile rebuild is n
 
 # Release Notes
 
+- 1.0.1 08/29/2020
+   - Add data confidence 
+   - Fix typo
 - 1.0.0 08/27/2020
    - Initial version.

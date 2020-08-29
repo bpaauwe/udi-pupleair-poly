@@ -9,12 +9,12 @@
     "notice": "",
     "shortPoll": "600",
     "longPoll": "3600",
-    "profile_version": "1.0.0",
+    "profile_version": "1.0.1",
     "credits": [ {
 	"title": "Purple Air: a node server for air quality data",
     	"author": "Bob Paauwe",
-    	"version": "1.0.0",
-    	"date": "August 27, 2020",
+    	"version": "1.0.1",
+    	"date": "August 29, 2020",
     	"source": "https://github.com/bpaauwe/udi-purpleair-poly",
 	    "license": "https://github.com/bpaauwe/udi-purpleair-poly/LICENSE"
 	} ]
