@@ -17,13 +17,14 @@ import math
 import re
 import json
 import node_funcs
+from nodes import sensor
 from datetime import timedelta
 
 LOGGER = polyinterface.LOGGER
 
 @node_funcs.add_functions_as_methods(node_funcs.functions)
 class Controller(polyinterface.Controller):
-    id = 'aqi'
+    id = 'controller'
     hint = [0,0,0,0]
     def __init__(self, polyglot):
         super(Controller, self).__init__(polyglot)
@@ -32,220 +33,80 @@ class Controller(polyinterface.Controller):
         self.primary = self.address
         self.configured = False
         self.force = True
-        self.host = 'https://www.purpleair.com/'
-        self.uom = {
-                'CLITEMP' : 17,
-                'CLIHUM' : 22,
-                'BARPRES' : 117,
-                'GV0' : 56,
-                'GV1' : 10,
-                'GV2' : 56,
-                'GV3' : 56,
-                'GV4' : 56,
-                'GV5' : 56,
-                'GV6' : 56,
-                'GV7' : 56,
-                'GV8' : 56,
-                'GV9' : 56,
-                'GV10' : 56,
-                'GV11' : 25,
-                'GV12' : 51,
-                }
-
-        self.params = node_funcs.NSParameters([{
-            'name': 'Sensor ID',
-            'default': 'set me',
-            'isRequired': True,
-            'notice': 'A Sensor ID must be set',
-            },
-            ])
-
+        self.sensor_list = {}
+        self.in_config = False
+        self.in_discover = False
 
         self.poly.onConfig(self.process_config)
 
     # Process changes to customParameters
     def process_config(self, config):
-        (valid, changed) = self.params.update_from_polyglot(config)
-        if changed and not valid:
-            LOGGER.debug('-- configuration not yet valid')
-            self.removeNoticesAll()
-            self.params.send_notices(self)
-        elif changed and valid:
-            LOGGER.debug('-- configuration is valid')
-            self.removeNoticesAll()
-            self.configured = True
+        rediscover = False
+        if self.in_config:
+            return
+
+        self.in_config = True
+        if 'customParams' in self.polyConfig:
+            for sensor_name in self.polyConfig['customParams']:
+                LOGGER.info('Found Purple Air sensor ID ' + sensor_name + ' with ID ' + self.polyConfig['customParams'][sensor_name])
+                if sensor_name not in self.sensor_list:
+                    sensor_id = self.polyConfig['customParams'][sensor_name]
+                    self.sensor_list[sensor_name] = {'id': sensor_id, 'configured': False}
+                    rediscover = True
+
+        if rediscover:
             self.discover()
-            self.query_conditions()
-        elif valid:
-            LOGGER.debug('-- configuration not changed, but is valid')
+            self.shortPoll()
+
+        self.in_config = False
 
     def start(self):
         LOGGER.info('Starting node server')
+        self.set_logging_level()
         self.check_params()
         self.discover()
         LOGGER.info('Node server started')
-
-        # Do an initial query to get filled in as soon as possible
-        self.query_conditions()
         self.force = False
+
+        self.shortPoll()
 
     def longPoll(self):
         LOGGER.debug('longpoll')
-        #self.query_forecast()
 
     def shortPoll(self):
-        self.query_conditions()
-
-    def epa_aqi(self, pm25):
-        aqi = 0
-        breakpoints = [
-                [0, 12],
-                [12.1, 35.4],
-                [35.5, 55.4],
-                [55.5, 150.4],
-                [150.5, 250.4],
-                [250.5, 500.4],
-                ]
-        indexes = [
-                [0, 50],
-                [51, 100],
-                [101, 150],
-                [151, 200],
-                [201, 300],
-                [301, 500],
-                ]
-
-        pm25 = round(pm25,1)
-
-        # find the breakpoints for the pm25 value
-        try:
-            for bpi in range(0,6):
-                if pm25 >= breakpoints[bpi][0] and pm25 <= breakpoints[bpi][1]:
-                    break
-        except Exception as e:
-            LOGGER.error('AQI_bp: ' + str(e))
-        
-        if bpi == 6:
-            LOGGER.error('AQI out of range!')
-            return
-
-        try:
-            aqi = ((indexes[bpi][1] - indexes[bpi][0]) / (breakpoints[bpi][1] - breakpoints[bpi][0])) * (pm25 - breakpoints[bpi][0]) + indexes[bpi][0]
-        except Exception as e:
-            LOGGER.error('AQI_calc: ' + str(e))
-
-        LOGGER.debug('Calculated AQI = ' + str(aqi))
-        return (round(aqi, 0), indexes[bpi][0])
-
-    def calculate_confidence(self, results):
-        channel_a = results[0]
-        channel_b = results[1]
-
-        if 'AGE' in channel_a and 'AGE' in channel_b:
-            if channel_a['AGE'] != channel_b['AGE']:
-                LOGGER.error('data channels age differs, bad data!')
-                return 0
-        else:
-            LOGGER.error('missing data age info.')
-            return 0
-
-        if 'PM2_5Value' in channel_a and 'PM2_5Value' in channel_b:
-            A = float(channel_a['PM2_5Value'])
-            B = float(channel_b['PM2_5Value'])
-
-            C = 100 - abs((A - B) / (A + B))
-            return round(C, 0)
-        else:
-            LOGGER.error('missing data for PM2.5.')
-            return 0
-
-
-    def query_conditions(self):
-        # Query for the current air quality conditions. We can do this fairly
-        # frequently, probably as often as once a minute.
-
-        if not self.configured:
-            LOGGER.info('Skipping connection because we aren\'t configured yet.')
-            return
-
-
-        try:
-            request = self.host + '/json?show=' + self.params.get('Sensor ID')
-
-            c = requests.get(request)
-            jdata = c.json()
-            c.close()
-            LOGGER.debug(jdata)
-
-            if jdata == None:
-                LOGGER.error('Current condition query returned no data')
-                return
-
-            results = jdata['results']
-
-            LOGGER.debug('found ' + str(len(results)) + ' sensor channesl.')
-
-            if len(results) >= 2:
-                # calculate confidence level
-                confidence = self.calculate_confidence(results)
-                LOGGER.info('Data confidence level = ' + str(confidence) + '%')
-                self.update_driver('GV12', confidence)
-
-            if 'Label' in results[0]:
-                LOGGER.info('Air Quality data for ' + results[0]['Label'])
-            if 'Type' in results[0]:
-                LOGGER.info('Air Quality sensor type ' + results[0]['Type'])
-
-            if 'PM2_5Value' in results[0]:
-                self.update_driver('GV0', results[0]['PM2_5Value'])
-
-            if 'temp_f' in results[0]:
-                self.update_driver('CLITEMP', results[0]['temp_f'])
-            if 'humidity' in results[0]:
-                self.update_driver('CLIHUM', results[0]['humidity'])
-            if 'pressure' in results[0]:
-                self.update_driver('BARPRES', results[0]['pressure'])
-
-            if 'AGE' in results[0]:
-                self.update_driver('GV1', results[0]['AGE'])
-
-            if 'Stats' in results[0]:
-                stats = json.loads(results[0]['Stats'])
-
-                #if 'v' in stats:
-                    # duplicate of PM2_5Value above
-                    #self.update_driver('GV2', stats['v'])
-                if 'v1' in stats:
-                    self.update_driver('GV3', stats['v1'])
-                    (aqi, idx) = self.epa_aqi(float(stats['v1']))
-                    self.update_driver('GV10', aqi)
-                    self.update_driver('GV11', idx)
-                if 'v2' in stats:
-                    self.update_driver('GV4', stats['v2'])
-                if 'v3' in stats:
-                    self.update_driver('GV5', stats['v3'])
-                if 'v4' in stats:
-                    self.update_driver('GV6', stats['v4'])
-                if 'v5' in stats:
-                    self.update_driver('GV7', stats['v5'])
-                if 'v6' in stats:
-                    self.update_driver('GV8', stats['v6'])
-                #if 'pm' in stats:
-                    # duplicate of PM2_5Value above
-                    #self.update_driver('GV9', stats['pm'])
-
-        except Exception as e:
-            LOGGER.error('Current observation update failure')
-            LOGGER.error(e)
-
+        for node in self.nodes:
+            if self.nodes[node].address != self.address:
+                LOGGER.error('Testing: calling short poll for ' + node)
+                self.nodes[node].shortPoll()
 
     def query(self):
         for node in self.nodes:
             self.nodes[node].reportDrivers()
 
     def discover(self, *args, **kwargs):
-        # Create any additional nodes here
+        # Create nodes for each sensor here
+        if self.in_discover:
+            return
+
+        self.in_discover = True
         LOGGER.info("In Discovery...")
+        for sensor_name in self.sensor_list:
+            LOGGER.debug(self.sensor_list[sensor_name])
+            if self.sensor_list[sensor_name]['configured']:
+                LOGGER.info('Sensor ' + sensor_name + ' already configured, skipping.')
+                continue
+
+            try:
+                node = sensor.SensorNode(self, self.address, self.sensor_list[sensor_name]['id'], sensor_name)
+                node.configure(self.sensor_list[sensor_name]['id'])
+                LOGGER.info('Adding new node for ' + sensor_name)
+                self.addNode(node)
+                self.sensor_list[sensor_name]['configured'] = True
+            except Exception as e:
+                LOGGER.error(str(e))
+
+        self.in_discover = False
+
 
     # Delete the node server from Polyglot
     def delete(self):
@@ -259,15 +120,16 @@ class Controller(polyinterface.Controller):
         return st
 
     def check_params(self):
-        self.removeNoticesAll()
-
-        if self.params.get_from_polyglot(self):
-            LOGGER.debug('All required parameters are set!')
-            self.configured = True
+        if 'customParams' in self.polyConfig:
+            for sensor_name in self.polyConfig['customParams']:
+                LOGGER.info('Found Purple Air sensor ID ' + sensor_name + ' with ID ' + self.polyConfig['customParams'][sensor_name])
+                if sensor_name not in self.sensor_list:
+                    sensor_id = self.polyConfig['customParams'][sensor_name]
+                    self.sensor_list[sensor_name] = {'id': sensor_id, 'configured': False}
         else:
-            LOGGER.debug('Configuration required.')
-            LOGGER.debug('Sensor ID = ' + self.params.get('Sensor ID'))
-            self.params.send_notices(self)
+            LOGGER.error('Config not found')
+
+        self.removeNoticesAll()
 
     def remove_notices_all(self, command):
         self.removeNoticesAll()

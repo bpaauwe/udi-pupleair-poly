@@ -1,8 +1,25 @@
 <nodeDefs>
-  <nodeDef id="aqi" nodeType="139" nls="ctl">
+  <nodeDef id="controller" nodeType="139" nls="ctl">
     <editors />
     <sts>
       <st id="ST" editor="bool" />
+    </sts>
+    <cmds>
+      <sends />
+      <accepts>
+        <cmd id="DISCOVER" />
+        <cmd id="REMOVE_NOTICES_ALL" />
+        <cmd id="UPDATE_PROFILE" />
+		<cmd id="DEBUG">
+			<p id="" editor="DEBUG" init="GVP"/>
+		</cmd>
+      </accepts>
+    </cmds>
+  </nodeDef>
+
+  <nodeDef id="aqi" nodeType="139" nls="sensor">
+    <editors />
+    <sts>
       <st id="GV0" editor="AQI" />
       <st id="GV1" editor="DAY" />
       <st id="CLITEMP" editor="TEMPERATURE" />
@@ -18,16 +35,7 @@
       <st id="GV11" editor="AQISTR" />
       <st id="GV12" editor="CONFIDENCE" />
     </sts>
-    <cmds>
-      <sends />
-      <accepts>
-        <cmd id="DISCOVER" />
-        <cmd id="REMOVE_NOTICES_ALL" />
-        <cmd id="UPDATE_PROFILE" />
-		<cmd id="DEBUG">
-			<p id="" editor="DEBUG" init="GVP"/>
-		</cmd>
-      </accepts>
-    </cmds>
+	<cmds></cmds>
   </nodeDef>
+
 </nodeDefs>

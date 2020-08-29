@@ -22,12 +22,14 @@ The settings for this node are:
    * How often to poll the Purple Air service for current AQI data (in seconds)
 #### Long Poll
    * Not used
-#### Sensor ID
-	* The ID of the Purple Air sensor to monitor.
+#### Custom Parameters
+	* A list of Purple Air devices to monitor. For the 'key', enter a name to use to identify the device (under 14 characters, no special characters). For the 'value' enter the Purple Air sensor ID. This is typically just a number.
 
 ## Node substitution variables
-### Air Quality node
+### Controller node
  * sys.node.[address].ST      (Node sever online)
+
+### Air Quality node
  * sys.node.[address].CLITEMP (current temperature)
  * sys.node.[address].CLIHUM  (current humidity)
  * sys.node.[address].BARPRES (current barometric pressure)
