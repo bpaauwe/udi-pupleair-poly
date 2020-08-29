@@ -75,6 +75,7 @@ class Controller(polyinterface.Controller):
             self.removeNoticesAll()
             self.configured = True
             self.discover()
+            self.query_conditions()
         elif valid:
             LOGGER.debug('-- configuration not changed, but is valid')
 
