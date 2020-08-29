@@ -49,6 +49,7 @@ class Controller(polyinterface.Controller):
                 'GV9' : 56,
                 'GV10' : 56,
                 'GV11' : 25,
+                'GV12' : 51,
                 }
 
         self.params = node_funcs.NSParameters([{
@@ -135,6 +136,29 @@ class Controller(polyinterface.Controller):
         LOGGER.debug('Calculated AQI = ' + str(aqi))
         return (round(aqi, 0), indexes[bpi][0])
 
+    def calculate_confidence(self, results):
+        channel_a = results[0]
+        channel_b = results[1]
+
+        if 'AGE' in channel_a and 'AGE' in channel_b:
+            if channel_a['AGE'] != channel_b['AGE']:
+                LOGGER.error('data channels age differs, bad data!')
+                return 0
+        else:
+            LOGGER.error('missing data age info.')
+            return 0
+
+        if 'PM2_5Value' in channel_a and 'PM2_5Value' in channel_b:
+            A = float(channel_a['PM2_5Value'])
+            B = float(channel_b['PM2_5Value'])
+
+            C = 100 - abs((A - B) / (A + B))
+            return round(C, 0)
+        else:
+            LOGGER.error('missing data for PM2.5.')
+            return 0
+
+
     def query_conditions(self):
         # Query for the current air quality conditions. We can do this fairly
         # frequently, probably as often as once a minute.
@@ -160,10 +184,11 @@ class Controller(polyinterface.Controller):
 
             LOGGER.debug('found ' + str(len(results)) + ' sensor channesl.')
 
-            # TODO:
-            # if there are two channels of data we should compare them
-            # and make sure they are close (within 10%?) and if so, 
-            # take the average to display.
+            if len(results) >= 2:
+                # calculate confidence level
+                confidence = self.calculate_confidence(results)
+                LOGGER.info('Data confidence level = ' + str(confidence) + '%')
+                self.update_driver('GV12', confidence)
 
             if 'Label' in results[0]:
                 LOGGER.info('Air Quality data for ' + results[0]['Label'])
@@ -289,6 +314,7 @@ class Controller(polyinterface.Controller):
             {'driver': 'GV8', 'value': 0, 'uom': 56},      # 1 week avg
             {'driver': 'GV10', 'value': 0, 'uom': 56},     # AQI
             {'driver': 'GV11', 'value': 0, 'uom': 25},     # AQI string
+            {'driver': 'GV12', 'value': 0, 'uom': 51},     # confidence
             ]
 
 

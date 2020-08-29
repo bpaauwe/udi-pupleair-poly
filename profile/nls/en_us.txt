@@ -21,6 +21,7 @@ ST-ctl-GV8-NAME = 1 Week Average
 ST-ctl-GV9-NAME = Real Time PM2.5
 ST-ctl-GV10-NAME = EPA AQI
 ST-ctl-GV11-NAME = EPA AQI Category
+ST-ctl-GV12-NAME = Data Confidence
 
 DBG-0 = Off
 DBG-10 = Debug

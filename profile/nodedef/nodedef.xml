@@ -16,6 +16,7 @@
       <st id="GV8" editor="AQI" />
       <st id="GV10" editor="EPAAQI" />
       <st id="GV11" editor="AQISTR" />
+      <st id="GV12" editor="CONFIDENCE" />
     </sts>
     <cmds>
       <sends />
