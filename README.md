@@ -60,6 +60,9 @@ The nodeserver keeps track of the version number and when a profile rebuild is n
 
 # Release Notes
 
+- 1.0.3 08/31/2020
+   - Remove test message
+   - Trap and report connection errors
 - 1.0.2 08/29/2020
    - Change to allow multiple Purple air device nodes.
 - 1.0.1 08/29/2020
