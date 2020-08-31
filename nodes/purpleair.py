@@ -76,7 +76,6 @@ class Controller(polyinterface.Controller):
     def shortPoll(self):
         for node in self.nodes:
             if self.nodes[node].address != self.address:
-                LOGGER.error('Testing: calling short poll for ' + node)
                 self.nodes[node].shortPoll()
 
     def query(self):
