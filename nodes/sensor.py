@@ -127,7 +127,7 @@ class SensorNode(polyinterface.Node):
             A = float(channel_a['PM2_5Value'])
             B = float(channel_b['PM2_5Value'])
 
-            C = 100 - abs((A - B) / (A + B))
+            C = 100 - abs(((A - B) / (A + B)) * 100)
             return round(C, 0)
         else:
             LOGGER.error('missing data for PM2.5.')
