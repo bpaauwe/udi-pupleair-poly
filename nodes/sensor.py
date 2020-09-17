@@ -145,13 +145,8 @@ class SensorNode(polyinterface.Node):
 
         try:
             c = requests.get(self.host)
-            try:
-                jdata = c.json()
-            except:
-                LOGGER.error('Connection issue: ' + str(c))
-                c.close()
-                return
-
+            jdata = c.json()
+            LOGGER.debug('Connection: ' + str(c))
             c.close()
             LOGGER.debug(jdata)
 
