@@ -145,6 +145,7 @@ class SensorNode(polyinterface.Node):
 
         try:
             c = requests.get(self.host)
+            LOGGER.debug('Host String: ' + str(c))
             try:
                 jdata = c.json()
             except:
