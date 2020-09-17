@@ -23,7 +23,7 @@
         <range uom="117" min="1000" max="2000" prec="0" />
         <range uom="118" min="1000" max="2000" prec="0" />
     </editor>
-    <editor id="DAY">
+    <editor id="MINUTES">
         <range uom="10" min="0" max="2000" />
     </editor>
     <editor id="AQISTR">
