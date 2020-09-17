@@ -24,7 +24,7 @@
         <range uom="118" min="1000" max="2000" prec="0" />
     </editor>
     <editor id="MINUTES">
-        <range uom="10" min="0" max="2000" />
+        <range uom="45" min="0" max="2000" />
     </editor>
     <editor id="AQISTR">
         <range uom="25" subset="0,51,101,151,201,301" NLS="AQI" />
