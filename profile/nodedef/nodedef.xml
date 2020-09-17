@@ -21,7 +21,7 @@
     <editors />
     <sts>
       <st id="GV0" editor="AQI" />
-      <st id="GV1" editor="DAY" />
+      <st id="GV1" editor="MINUTES" />
       <st id="CLITEMP" editor="TEMPERATURE" />
       <st id="CLIHUM" editor="PERCENT" />
       <st id="BARPRES" editor="PRESSURE" />
