@@ -34,7 +34,7 @@ The settings for this node are:
  * sys.node.[address].CLIHUM  (current humidity)
  * sys.node.[address].BARPRES (current barometric pressure)
  * sys.node.[address].GV0     (current PM2.5 value speed)
- * sys.node.[address].GV1     (Age of data in days)
+ * sys.node.[address].GV1     (Age of data in minutes)
  * sys.node.[address].GV3     (10 minute average)
  * sys.node.[address].GV4     (30 minute average)
  * sys.node.[address].GV5     (60 minute average)

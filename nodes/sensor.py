@@ -33,7 +33,7 @@ class SensorNode(polyinterface.Node):
                 'CLIHUM' : 22,
                 'BARPRES' : 117,
                 'GV0' : 56,
-                'GV1' : 10,
+                'GV1' : 45,
                 'GV2' : 56,
                 'GV3' : 56,
                 'GV4' : 56,
@@ -53,7 +53,7 @@ class SensorNode(polyinterface.Node):
             {'driver': 'CLIHUM', 'value': 0, 'uom': 22},   # humidity
             {'driver': 'BARPRES', 'value': 0, 'uom': 117}, # pressure
             {'driver': 'GV0', 'value': 0, 'uom': 56},      # current PM2.5
-            {'driver': 'GV1', 'value': 0, 'uom': 10},      # age in days
+            {'driver': 'GV1', 'value': 0, 'uom': 45},      # age in minutes
             {'driver': 'GV3', 'value': 0, 'uom': 56},      # 10 min avg
             {'driver': 'GV4', 'value': 0, 'uom': 56},      # 30 min avg
             {'driver': 'GV5', 'value': 0, 'uom': 56},      # 60 min avg
