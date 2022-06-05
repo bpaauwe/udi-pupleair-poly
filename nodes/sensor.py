@@ -27,6 +27,7 @@ class SensorNode(polyinterface.Node):
         super(SensorNode, self).__init__(controller, primary, address, name)
 
         self.host = ''
+        self.headers = ''
         self.configured = False;
         self.uom = {
                 'CLITEMP' : 17,
@@ -66,8 +67,9 @@ class SensorNode(polyinterface.Node):
             ]
 
 
-    def configure(self, sensor):
-        self.host = 'https://www.purpleair.com/json?show=' + sensor
+    def configure(self, sensor, apikey):
+        self.host = 'https://api.purpleair.com/v1/sensors/' + sensor
+        self.headers = {'X-API-Key':apikey}
         self.configured = True
 
     def epa_aqi(self, pm25):
@@ -144,7 +146,7 @@ class SensorNode(polyinterface.Node):
 
 
         try:
-            c = requests.get(self.host)
+            c = requests.get(self.host, headers=self.headers)
             try:
                 jdata = c.json()
             except:
@@ -159,58 +161,50 @@ class SensorNode(polyinterface.Node):
                 LOGGER.error('Current condition query returned no data')
                 return
 
-            results = jdata['results']
+            sensor = jdata['sensor']
 
-            LOGGER.debug('found ' + str(len(results)) + ' sensor channesl.')
+            if 'name' in sensor:
+                LOGGER.info('Air Quality data for ' + sensor['name'])
+            if 'model' in sensor:
+                LOGGER.info('Air Quality sensor type ' + sensor['model'])
 
-            if len(results) >= 2:
-                # calculate confidence level
-                confidence = self.calculate_confidence(results)
-                LOGGER.info('Data confidence level = ' + str(confidence) + '%')
-                self.update_driver('GV12', confidence)
+            if 'pm2.5' in sensor:
+                self.update_driver('GV0', sensor['pm2.5'])
+                (aqi, idx) = self.epa_aqi(float(sensor['pm2.5']))
+                self.update_driver('GV10', aqi)
+                self.update_driver('GV11', idx)
 
-            if 'Label' in results[0]:
-                LOGGER.info('Air Quality data for ' + results[0]['Label'])
-            if 'Type' in results[0]:
-                LOGGER.info('Air Quality sensor type ' + results[0]['Type'])
+            if 'confidence' in sensor:
+                LOGGER.info('Data confidence level = ' + str(sensor['confidence']) + '%')
+                self.update_driver('GV12', sensor['confidence'])
+            if 'temperature' in sensor:
+                self.update_driver('CLITEMP', sensor['temperature'])
+            if 'humidity' in sensor:
+                self.update_driver('CLIHUM', sensor['humidity'])
+            if 'pressure' in sensor:
+                self.update_driver('BARPRES', sensor['pressure'])
 
-            if 'PM2_5Value' in results[0]:
-                self.update_driver('GV0', results[0]['PM2_5Value'])
+            # age is difference between jdata[time_stamp] and sensor['last_seen']
+            #  in minutes
+            if 'time_stamp' in jdata and 'last_seen' in sensor:
+                age = (jdata['time_stamp'] - sensor['last_seen']) / 60
+                self.update_driver('GV1', age)
 
-            if 'temp_f' in results[0]:
-                self.update_driver('CLITEMP', results[0]['temp_f'])
-            if 'humidity' in results[0]:
-                self.update_driver('CLIHUM', results[0]['humidity'])
-            if 'pressure' in results[0]:
-                self.update_driver('BARPRES', results[0]['pressure'])
-
-            if 'AGE' in results[0]:
-                self.update_driver('GV1', results[0]['AGE'])
-
-            if 'Stats' in results[0]:
-                stats = json.loads(results[0]['Stats'])
-
-                #if 'v' in stats:
-                    # duplicate of PM2_5Value above
-                    #self.update_driver('GV2', stats['v'])
-                if 'v1' in stats:
-                    self.update_driver('GV3', stats['v1'])
-                    (aqi, idx) = self.epa_aqi(float(stats['v1']))
-                    self.update_driver('GV10', aqi)
-                    self.update_driver('GV11', idx)
-                if 'v2' in stats:
-                    self.update_driver('GV4', stats['v2'])
-                if 'v3' in stats:
-                    self.update_driver('GV5', stats['v3'])
-                if 'v4' in stats:
-                    self.update_driver('GV6', stats['v4'])
-                if 'v5' in stats:
-                    self.update_driver('GV7', stats['v5'])
-                if 'v6' in stats:
-                    self.update_driver('GV8', stats['v6'])
-                #if 'pm' in stats:
-                    # duplicate of PM2_5Value above
-                    #self.update_driver('GV9', stats['pm'])
+            LOGGER.error('Loading stats')
+            if 'stats' in sensor:
+                stats = sensor['stats']
+                if 'pm2.5_10minute' in stats:
+                    self.update_driver('GV3', stats['pm2.5_10minute'])
+                if 'pm2.5_30minute' in stats:
+                    self.update_driver('GV4', stats['pm2.5_30minute'])
+                if 'pm2.5_60minute' in stats:
+                    self.update_driver('GV5', stats['pm2.5_60minute'])
+                if 'pm2.5_6hour' in stats:
+                    self.update_driver('GV6', stats['pm2.5_6hour'])
+                if 'pm2.5_24hour' in stats:
+                    self.update_driver('GV7', stats['pm2.5_24hour'])
+                if 'pm2.5_1week' in stats:
+                    self.update_driver('GV8', stats['pm2.5_1week'])
 
         except Exception as e:
             LOGGER.error('Current observation update failure')

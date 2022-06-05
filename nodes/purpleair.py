@@ -36,6 +36,7 @@ class Controller(polyinterface.Controller):
         self.sensor_list = {}
         self.in_config = False
         self.in_discover = False
+        self.apikey = ''
 
         self.poly.onConfig(self.process_config)
 
@@ -48,8 +49,10 @@ class Controller(polyinterface.Controller):
         self.in_config = True
         if 'customParams' in self.polyConfig:
             for sensor_name in self.polyConfig['customParams']:
-                LOGGER.info('Found Purple Air sensor ID ' + sensor_name + ' with ID ' + self.polyConfig['customParams'][sensor_name])
-                if sensor_name not in self.sensor_list:
+                if sensor_name == 'APIKey':
+                    self.apikey = self.polyConfig['customParams']['APIKey']
+                elif sensor_name not in self.sensor_list:
+                    LOGGER.info('Found Purple Air sensor ID ' + sensor_name + ' with ID ' + self.polyConfig['customParams'][sensor_name])
                     sensor_id = self.polyConfig['customParams'][sensor_name]
                     self.sensor_list[sensor_name] = {'id': sensor_id, 'configured': False}
                     rediscover = True
@@ -97,7 +100,7 @@ class Controller(polyinterface.Controller):
 
             try:
                 node = sensor.SensorNode(self, self.address, self.sensor_list[sensor_name]['id'], sensor_name)
-                node.configure(self.sensor_list[sensor_name]['id'])
+                node.configure(self.sensor_list[sensor_name]['id'], self.apikey)
                 LOGGER.info('Adding new node for ' + sensor_name)
                 self.addNode(node)
                 self.sensor_list[sensor_name]['configured'] = True
@@ -121,8 +124,10 @@ class Controller(polyinterface.Controller):
     def check_params(self):
         if 'customParams' in self.polyConfig:
             for sensor_name in self.polyConfig['customParams']:
-                LOGGER.info('Found Purple Air sensor ID ' + sensor_name + ' with ID ' + self.polyConfig['customParams'][sensor_name])
-                if sensor_name not in self.sensor_list:
+                if sensor_name == 'APIKey':
+                    self.apikey = self.polyConfig['customParams']['APIKey']
+                elif sensor_name not in self.sensor_list:
+                    LOGGER.info('Found Purple Air sensor ID ' + sensor_name + ' with ID ' + self.polyConfig['customParams'][sensor_name])
                     sensor_id = self.polyConfig['customParams'][sensor_name]
                     self.sensor_list[sensor_name] = {'id': sensor_id, 'configured': False}
         else:

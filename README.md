@@ -60,6 +60,8 @@ The nodeserver keeps track of the version number and when a profile rebuild is n
 
 # Release Notes
 
+- 1.0.5 06/05/2022
+   - Switch to using new API
 - 1.0.4 08/31/2020
    - Fix confidence level calculation
 - 1.0.3 08/31/2020
