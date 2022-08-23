@@ -190,7 +190,6 @@ class SensorNode(polyinterface.Node):
                 age = (jdata['time_stamp'] - sensor['last_seen']) / 60
                 self.update_driver('GV1', age)
 
-            LOGGER.error('Loading stats')
             if 'stats' in sensor:
                 stats = sensor['stats']
                 if 'pm2.5_10minute' in stats:
